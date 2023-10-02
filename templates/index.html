@@ -8,17 +8,17 @@
 
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 
-  <!-- <link rel="stylesheet" href="css/style.css"> -->
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+  <!-- <link rel="stylesheet" href="/static/style.css"> -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
 
-<link rel="stylesheet" href="{{ url_for('static', filename='owl.carousel.min.css')}}">
-  <!-- <link rel="stylesheet" href="css/owl.carousel.min.css"> -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='owl.carousel.min.css')}}">
+  <!-- <link rel="stylesheet" href="/static/owl.carousel.min.css"> -->
   <!-- Bootstrap CSS -->
-  <!-- <link rel="stylesheet" href="css/bootstrap.min.css"> -->
+  <!-- <link rel="stylesheet" href="/static/bootstrap.min.css"> -->
   <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css')}}">
 
   <!-- Style -->
-  
+
 
   <title>Snap-Track</title>
 </head>
@@ -41,36 +41,40 @@
       <div class="row align-items-center">
 
         <div class="col-11 col-xl-2">
-          <h1 class="mb-0 site-logo"><a href="index.html" class="text-white mb-0">Snap Track</a></h1>
+          <h1 class="mb-0 site-logo"><a href="{{url_for('index.html')}}" class="text-white mb-0">Snap Track</a></h1>
         </div>
         <div class="col-12 col-md-10 d-none d-xl-block">
           <nav class="site-navigation position-relative text-right" role="navigation">
 
             <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
-              <li class="active"><a href="index.html"><span>Attendance </span></a></li>
-              <!-- <li class="has-children">
-                  <a href="about.html"><span>Dropdown</span></a>
-                  <ul class="dropdown arrow-top">
-                    <li><a href="#">Menu One</a></li>
-                    <li><a href="#">Menu Two</a></li>
-                    <li><a href="#">Menu Three</a></li>
-                    <li class="has-children">
-                      <a href="#">Dropdown</a>
-                      <ul class="dropdown">
-                        <li><a href="#">Menu One</a></li>
-                        <li><a href="#">Menu Two</a></li>
-                        <li><a href="#">Menu Three</a></li>
-                        <li><a href="#">Menu Four</a></li>
-                      </ul>
-                    </li>
-                  </ul>
-                </li> -->
-              <li><a href="listings.html"><span>Profiles</span></a></li>
-
+              <li class="active"><a href="{{url_for('index.html')}}"><span>Home </span></a></li>
+              <!-- <a href="/" onclick="loadContent('home')">Home</a> -->
+              <li><a href="" onclick="loadContent('attendance')"><span>Attendance</span></a></li>
+              <li><a href="user/1" onclick="loadContent('user_profile',1)"><span>Profiles</span></a></li>
+            <!-- <a href="/user/1" onclick="loadContent('user_profile', 1)">Profiles</a> -->
+              <li class="has-children">
+                <a href="#"><span>More</span></a>
+                <ul class="dropdown arrow-top">
+                  <li><a href="#">Add or remove subject</a></li>
+                  <li><a href="#">Upload Attendance sheet</a></li>
+                  <li><a href="#">??</a></li>
+                  <li class="has-children">
+                    <a href="#">Settings</a>
+                    <ul class="dropdown">
+                      <li><a href="#">Change password</a></li>
+                      <li><a href="#">??</a></li>
+                
+                    </ul>
+                  </li>
+                  
+                </ul>
+              </li>
+              <li><a href="logout"><span>Log out</span></a></li>
             </ul>
           </nav>
         </div>
-
+<!-- <a href="/" onclick="loadContent('home')">Home</a> -->
+              <!-- <a href="/user/1" onclick="loadContent('user_profile', 1)">Profiles</a> -->
 
         <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#"
             class="site-menu-toggle js-menu-toggle text-white"><span class="icon-menu h3"></span></a></div>
@@ -82,12 +86,26 @@
 
   </header>
 
-  <div class="hero" style="background-image: url('images/hero_1.jpg');">
+  <div class="hero" style="background-image: url('/static/images/hero_1.jpg');">
     <div class="text5">
       Hey, {{session.username}}!!<br><br>
       Welcome to Snap-Track
     </div>
   </div>
+  <div id="content-container">
+    <!-- Content will be loaded dynamically here -->
+  </div>
+  <script>
+    // Function to load content dynamically without page reload
+    function loadContent(route, param = null) {
+      let url = param ? `/${route}/${param}` : `/${route}`;
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('content-container').innerHTML = html;
+        });
+    }
+  </script>
 
 
   <script src="{{ url_for('static', filename='jquery-3.3.1.min.js.js') }}"></script>
@@ -107,4 +125,3 @@
 </body>
 
 </html>
-
