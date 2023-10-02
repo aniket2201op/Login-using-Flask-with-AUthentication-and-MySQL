@@ -73,7 +73,28 @@ def register():
 	elif request.method == 'POST':
 		msg = 'Please fill out the form !'
 	return render_template('register.html', msg = msg)
+	
+# Route to display user profile
+@app.route('/user/<int:user_id>')
+def user_profile(user_id):
+    # Connect to MySQL
+    connection = mysql.connector.connect(**db_config)
+    cursor = connection.cursor()
 
+    # Fetch user data from the database
+    query = "SELECT * FROM users WHERE id = %s"
+    cursor.execute(query, (user_id,))
+    user_data = cursor.fetchone()
+
+    # Close database connection
+    cursor.close()
+    connection.close()
+
+    if user_data:
+        # Pass user data to the template
+        return render_template('user_profile.html', user=user_data)
+    else:
+        return "User not found"
 
 if __name__ == '__main__':
     app.debug = True
