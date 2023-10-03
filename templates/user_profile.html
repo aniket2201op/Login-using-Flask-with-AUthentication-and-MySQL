@@ -5,34 +5,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> -->
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- <link rel="stylesheet" href="/static/styles.css"> -->
     
 </head>
 <body>
     <div class="container">
-        <h1>User Profile</h1>
+        <h1>Student Details</h1>
         <div class="user-details">
             <div class="user-image">
-                <!-- <img src="{{ user[3] }}" alt="User Image"> -->
-                <img src="/static/images/hero_1.jpg" alt="">
+                <!-- <img src="{{ user['image'] }}" alt="Image"> -->
+                <img src="/static/default.jpg" alt="">
             </div>
             <div class="user-info">
                 <div class="user-info-left">
-                    <p>ID: {{ user[0] }}</p>
-                    <p>Name: {{ user[1] }}</p>
-                    <p>Email: {{ user[2] }}</p>
+                    <p>PRN: {{ user['prn'] }}</p>
+                    <p>Name: {{ user['name'] }}</p>
+                    <p>Email: {{ user['email'] }}</p>
                 </div>
                 <div class="user-info-right">
-                    <p>Phone: {{ user[4] }}</p>
-                    <p>Address: {{ user[5] }}</p>
+                    <p>Phone: {{ user['phone'] }}</p>
+                    <p>Blood Group: {{ user['blood_grp'] }}</p>
+                    <p>Address: {{ user['address'] }}</p>
                     <!-- Add more fields as needed -->
                 </div>
             <!-- Add more fields as needed -->
         </div>
-        <!-- <div class="back-link">
-            <a href="{{url_for('index.html')}}">Back to Home</a>
-        </div> -->
+        <div class="back-link">
+            <a href="{{url_for('home')}}">Back to Home</a>
+        </div>
     </div>
 </body>
 </html>
