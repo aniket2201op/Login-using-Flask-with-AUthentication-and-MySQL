@@ -10,7 +10,12 @@ app = Flask(__name__)
 
 
 app.secret_key = '1234'
-
+db_config = {
+    'host': 'localhost',
+    'user': 'root',
+    'password': '1234',
+    'database': 'ved'
+}
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '1234'
@@ -33,7 +38,7 @@ def login():
 			session['id'] = account['id']
 			session['username'] = account['username']
 			msg = 'Logged in successfully !'
-			return render_template('index.html', msg = msg)
+			return redirect(url_for('home'))
 		else:
 			msg = 'Incorrect username / password !'
 	return render_template('login.html', msg = msg)
@@ -44,6 +49,7 @@ def logout():
 	session.pop('id', None)
 	session.pop('username', None)
 	return redirect(url_for('login'))
+
 
 @app.route('/register', methods =['GET', 'POST'])
 def register():
@@ -70,33 +76,39 @@ def register():
 			cursor.execute('INSERT INTO register VALUES (NULL, % s, % s, % s, % s, % s, % s)', (username, email, branch,year, subject,password))
 			mysql.connection.commit()
 			msg = 'You have successfully registered !'
+			return render_template('login.html', msg=msg)
 	elif request.method == 'POST':
 		msg = 'Please fill out the form !'
 	return render_template('register.html', msg = msg)
 	
+@app.route('/home')
+def home():
+	return render_template('home.html')
+
 # Route to display user profile
-@app.route('/user/<int:user_id>')
+@app.route('/user/<user_id>')
 def user_profile(user_id):
-    # Connect to MySQL
-    connection = mysql.connector.connect(**db_config)
-    cursor = connection.cursor()
+    try:
+        # Connect to MySQL using Flask-MySQLDB
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        
+        # Execute the query to fetch user data
+        cursor.execute("SELECT * FROM users WHERE prn = %s", (user_id,))
+        user_data = cursor.fetchone()
+		
+        cursor.close()
+		
+        if user_data:
+            # Pass user data to the template
+            return render_template('user_profile.html', user=user_data)
+        else:
+            return "Data not found"
 
-    # Fetch user data from the database
-    query = "SELECT * FROM users WHERE id = %s"
-    cursor.execute(query, (user_id,))
-    user_data = cursor.fetchone()
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
 
-    # Close database connection
-    cursor.close()
-    connection.close()
-
-    if user_data:
-        # Pass user data to the template
-        return render_template('user_profile.html', user=user_data)
-    else:
-        return "User not found"
 
 if __name__ == '__main__':
-    app.debug = True
-    app.run()
-    app.run(debug = True)
+    app.run(debug=True)
+
+
